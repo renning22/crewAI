@@ -19,6 +19,18 @@ from crewai.utilities.constants import TRAINED_AGENTS_DATA_FILE, TRAINING_DATA_F
 from crewai.utilities.token_counter_callback import TokenCalcHandler
 from crewai.utilities.training_handler import CrewTrainingHandler
 
+
+#### Ning
+from langfuse.callback import CallbackHandler
+langfuse_handler = CallbackHandler(
+    public_key="pk-lf-808d8ea1-e6c6-4640-8fc5-e93995a7882c",
+    secret_key="sk-lf-e1e39101-2a9f-4b4a-b3b9-dabdce2d4e7d",
+    host="https://us.cloud.langfuse.com"
+)
+####
+
+
+
 agentops = None
 try:
     import agentops  # type: ignore # Name "agentops" already defined on line 21
@@ -197,7 +209,8 @@ class Agent(BaseAgent):
                     "input": task_prompt,
                     "tool_names": self.agent_executor.tools_names,
                     "tools": self.agent_executor.tools_description,
-                }
+                },
+                config={"callbacks": [langfuse_handler]}
             )["output"]
         except Exception as e:
             self._times_executed += 1
